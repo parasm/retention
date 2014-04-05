@@ -1,3 +1,7 @@
 Flask==0.9
 Jinja2==2.6
 gunicorn==0.17.2
+pymongo==2.6.3
+requests==2.2.1
+facebook-sdk==0.3.0
+sendgrid==0.1.4
