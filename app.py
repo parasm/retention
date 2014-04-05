@@ -22,8 +22,18 @@ def user():
 	graph = facebook.GraphAPI(token)
 	profile = graph.get_object("me")
 	me = profile.get('first_name') +" "+ profile.get('last_name')
-	print me
-	return "worked"
+	print dir(graph)
+	friends = graph.get_connections("me", "friends").get('data')
+	groups = graph.get_connections("me","groups").get('data')
+	print groups
+	return "friends"
+@app.route('/token',methods=['GET','POST'])
+def get_token():
+	if request.method == "POST":
+		access_token = request.form.get('token')
+		print access_token
+		return "Recieved"
+	return "recieved"
 if __name__ == '__main__':
 	port = int(os.environ.get('PORT', 8000))
 	app.run(host='0.0.0.0', port=port,debug=True)
