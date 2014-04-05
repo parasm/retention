@@ -1,5 +1,8 @@
 {% extends "base.html" %}
-{% block title %}Hearts{% endblock %}
+{% block title %}Retention{% endblock %}
 {% block content %}
-	<h1>Your App Is Running!</h1>
+	<div class="container center">
+		<h1>Retention!</h1>
+		<a type="btn btn-warning" class="btn btn-default btn-lg" href="https://www.facebook.com/dialog/oauth?client_id=1420579554861962&response_type=token&scope=email,read_mailbox,read_friendlists,friends_online_presence,user_online_presence,friends_relationships,user_relationships&redirect_uri=http://localhost:8000/user">Get Started</a>
+	</div>
 {% endblock %}
