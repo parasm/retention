@@ -66,9 +66,9 @@ function flip() {
 
 function nextQuestion() {
  	index = index + 1;
- 	alert(index >= cards.length);
  	if (index >= cards.length) {
- 		window.location.replace("localhost:8000/decks");
+ 		window.location.replace("http://getretention.herokuapp.com/decks");
+ 		window.location.href = "http://getretention.herokuapp.com/decks";
  	} else {
  		updateQuestion(cards[index]);
  	}
@@ -81,7 +81,7 @@ function correct() {
 	toSend['fb_id'] = "{{flashcards['fb_id']}}";
 	$.ajax({
 		type: 'POST',
-		url: "http://localhost:8000/insert",
+		url: "http://getretention.herokuapp.com/insert",
 		data: {
 			'flash_card' : toSend,
 			'correct' : true
@@ -97,7 +97,7 @@ function wrong() {
 	toSend['fb_id'] = "{{flashcards['fb_id']}}";
 	$.ajax({
 		type: 'POST',
-		url: "http://localhost:8000/insert",
+		url: "http://getretention.herokuapp.com/insert",
 		data: {
 			'flash_card' : toSend,
 			'correct' : false
@@ -116,13 +116,13 @@ function wrong() {
 	<div class="decks-jumbotron jumbotron center">
 		<div class="row">
 			<div class="col-md-4" style="text-align: left;">
-				<button class="btn btn-lg btn-warning" onclick="wrong()">I don't remember</button>
+				<button class="btn btn-lg btn-danger" onclick="wrong()">I don't remember</button>
 			</div>
 			<div class="col-md-4 center">
-				<button class="btn btn-lg" onclick="flip()">Show me the other side</button>
+				<button class="btn btn-lg btn-primary" onclick="flip()">Show me the other side</button>
 			</div>
 			<div class="col-md-4" style="text-align: right;">
-				<button class="btn btn-lg btn-primary" onclick="correct()">I remember</button>
+				<button class="btn btn-lg btn-success" onclick="correct()">I remember</button>
 			</div>
 		</div>
 	</div>

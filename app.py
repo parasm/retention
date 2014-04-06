@@ -19,11 +19,11 @@ app.secret_key = 'paras_is_the_slim_reaper'
 
 
 def sendgrid_notification(user, numcards):
-	sg = sendgrid.SendGridClient('parasm','bcabooks')
+	sg = sendgrid.Sendgrid('parasm','bcabooks')
 	body = 'It\'s time to study. You have ' + str(numcards) + ' flashcards that you should take a look at.\n http://getretention.herokuapp.com/'
-	message = sendgrid.Mail(to=user["email"], subject='GetRetention reminds you to study!', html=body, text=body, from_email='info@getretention.herokuapp.com')
-	status, msg = sg.send(message)
-	return status
+	message = sendgrid.Message('info@getretention.herokuapp.com', 'GetRetention reminds you to study!', body, body)
+	message.add_to(user["email"],user['first_name'])
+	sg.web.send(message)
 
 def twilio_notification(user, numcards):
 	account = "AC36ddf2336e764b488e813b2941ebfe45"
@@ -60,10 +60,14 @@ def insert(flashcard, response=True):
 	except KeyError:
 		flashcard['cards'] = [
 			{'question' : flashcard['question'],
-			'answer' : flashcard['answer']},
+			'answer' : flashcard['answer'],
+			'attempts' : flashcard['attempts'],
+			'stage' : flashcard['stage']},
 		]
-		flashcard.remove('question')
-		flashcard.remove('answer')
+		flashcard.pop('question', None)
+		flashcard.pop('answer', None)
+		flashcard.pop('stage', None)
+		flashcard.pop('attempts', None)
 
 	try:
 		result = flashcards.find({"fb_id":flashcard["fb_id"],"time":flashcard['time']}).limit(1)[0]
@@ -79,6 +83,10 @@ def insertall(user):
 	for flashcard in user["flashcards"]:
 		insert(flashcard)
 
+
+@app.route('/logout')
+def helasdflo():
+	return redirect('/')
 @app.route('/')
 def hello():
 	session.pop('token',None)
@@ -138,6 +146,7 @@ def study(uid):
 	from_db = flashcards.find({"_id":ObjectId(uid)})[0]
 	if not from_db:
 		return redirect('/decks')
+	flashcards.remove({"_id":ObjectId(uid)})
 	return render_template('study.html',flashcards=from_db)
 @app.route('/notify')
 def notify():
