@@ -33,7 +33,7 @@ def twilio_notification(user, numcards):
 	message = client.messages.create(to="+12019626168", from_="+15704378644", body=body)
 	return "received"
 
-interval={1:30,2:120,3:300,4:900,5:60*60,6:5*60*60,7:24*60*60,8:5*24*60*60,9:25*24*60*60,10:60*24*60*60}
+interval={0:30, 1:30,2:120,3:300,4:900,5:60*60,6:5*60*60,7:24*60*60,8:5*24*60*60,9:25*24*60*60,10:60*24*60*60}
 
 #inserts the flashcard into the flashcard database based on correct or incorrect response given by user
 def insert(flashcard, response=True):
@@ -52,7 +52,6 @@ def insert(flashcard, response=True):
         else:
             delta_stage = -2
     flashcard["stage"] += delta_stage
-    print flashcard["stage"]
     flashcard["time"] = time.time() + interval[int(flashcard["stage"])]
     flashcard['reminded'] = False
     result = flashcards.find({"fb_id":flashcard["fb_id"]}).limit(1)[0]
@@ -128,21 +127,29 @@ def study(uid):
 @app.route('/notify')
 def notify():
 	current_time = time.time()
-	for user in users.find({}):
-		print(user["username"])
-		for flashcard in user["flashcards"]:
-			flashcards_due = []
-			for card in flashcard["cards"]:
-				#print(card)
-				if card["time"] <= current_time:
-					flashcards_due.append(card)
-					card["reminded"] = True
-					flashcards.update({'fb_id':card.get('id')},card)
-			#print("sent placeholder")
-			#twilio_notification(user, len(flashcards_due))
-			if card["reminded"] == False:
-				sendgrid_notification(user, len(flashcards_due))
-				twilio_notification(user, len(flashcards_due))
+	to_notify = flashcards.find({'time':{'$lt' : current_time}, 'reminded':False})
+	for batch in to_notify:
+		user = users.find({'fb_id' : batch['fb_id']})[0]
+		sendgrid_notification(user, len(batch['cards']))
+		twilio_notification(user, len(batch['cards']))
+		batch['reminded'] = True
+		flashcards.update({'_id':batch['_id']},batch)
+
+	# for user in users.find({}):
+	# 	print(user["username"])
+	# 	for flashcard in user["flashcards"]:
+	# 		flashcards_due = []
+	# 		for card in flashcard["cards"]:
+	# 			#print(card)
+	# 			if card["time"] <= current_time:
+	# 				flashcards_due.append(card)
+	# 				card["reminded"] = True
+	# 				flashcards.update({'fb_id':card.get('id')},card)
+	# 		#print("sent placeholder")
+	# 		#twilio_notification(user, len(flashcards_due))
+	# 		if card["reminded"] == False:
+	# 			sendgrid_notification(user, len(flashcards_due))
+	# 			twilio_notification(user, len(flashcards_due))
 	return redirect('/')
 @app.route('/add_decks',methods=['GET','POST'])
 def add_decks():
@@ -218,7 +225,7 @@ def inserty():
 			correct = False
 		insert(card,response=correct)
 		# return redirect('/')
-		return
+		return 'Success!'
 @app.route('/extensions', methods=['GET','POST'])
 def extend():
 	token = session.get('token')
