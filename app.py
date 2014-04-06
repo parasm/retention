@@ -5,6 +5,7 @@ import facebook
 from pymongo import MongoClient
 import sendgrid
 import time
+import requests
 from bson.objectid import ObjectId
 
 client = MongoClient("mongodb://admin:pretzelssux201@oceanic.mongohq.com:10099/retention")
@@ -14,6 +15,32 @@ flashcards = db.flashcards
 
 app = Flask(__name__)
 app.secret_key = 'paras_is_the_slim_reaper'
+
+interval={1:30,2:120,3:300,4:900,5:60*60,6:5*60*60,7:24*60*60,8:5*24*60*60,9:25*24*60*60,10:60*24*60*60}
+
+#inserts the flashcard into the flashcard database based on correct or incorrect response given by user
+def insert(flashcard, response=1):
+    #delta_stage is the change in the memorization stage based on response & current stage
+    if flashcard["stage"] < 5:
+        if response == true:
+            delta_stage = 1
+        else:
+            delta_stage =- 1
+    else:
+        if response == true:
+            delta_stage = 2
+        else:
+            delta_stage =- 2
+    flashcard["stage"] += delta_stage
+    flashcard["time"] = time.time() + interval[flashcard["stage"]]
+    result = flashcards.find({"id":flashcard["id"]}).limit(1)[0]
+    if result == None:
+        flashcards.insert(flashcard)
+    else:
+        flashcards.update({"_id":result["_id"]},flashcard)
+def insertall(user):
+    for flashcard in user["flashcards"]:
+    	insert(flashcard)
 
 @app.route('/')
 def hello():
@@ -60,6 +87,7 @@ def decks():
 		person = users.find({"fb_id":user})[0]
 		flashcards = person.get('flashcards')
 		if flashcards:
+			insertall(users.find({'fb_id':user}))
 			return render_template('decks.html',count=len(flashcards),decks=flashcards)
 		else:
 			return redirect('/add_decks')
@@ -78,7 +106,6 @@ def face():
 	gs = [groups]
 	print gs
 	group_count = []
-	print 
 	for g in groups:
 		group_count.append(len(graph.get_connections(g.get('id'),"members").get('data')))
 	return render_template('facebook.html', groups=groups,group_count=group_count)
@@ -87,11 +114,18 @@ def facebook_id(id):
 	token = session.get('token')
 	graph = facebook.GraphAPI(token)
 	profile = graph.get_object("me")
-	print graph.get_object(id)
-	print graph.get_connections(id,"members").get('data')
-	# flashcards.insert({'time':time.time(),'username':profile.get('username'),'flashcards':None,'stage':0,
-	# 	'attempts':0,'deck_name':group_name,reminded:True})
-	return redirect('/')
+	group =  graph.get_object(id)
+	members = graph.get_connections(id,"members").get('data')
+	flash = []
+	for p in members:
+		image_url ='https://graph.facebook.com/'+p.get('id')+'/picture'
+		flash.append({'question':{'type':'image','value':image_url},'answer':{'type':'text','value':p.get('name')}})
+		id = flashcards.insert({'time':time.time(),'username':profile.get('username'),'flashcards':flash,'stage':0,
+			'attempts':0,'deck_name':group.get('name'),reminded:True,'fb_id':profile.get('fb_id')})
+		person = users.find({'fb_id':profile.get('id')}).limit(1)[0]
+		person['flashcards'].append({'deck_name':group.get('name'),"id":id})
+		users.update({'fb_id':profile.get('fb_id')},person)
+	return redirect('/decks')
 @app.route('/add_decks/custom',methods=['GET','POST'])
 def custom():
 	return render_template('custom.html')
