@@ -10,32 +10,37 @@ client = MongoClient("mongodb://admin:pretzelssux201@oceanic.mongohq.com:10099/r
 db = client.get_default_database()
 users = db.users
 
-app.secret_key = 'paras_is_the_slim_reaper'
-
 app = Flask(__name__)
+
+app.secret_key = 'paras_is_the_slim_reaper'
 
 @app.route('/')
 def hello():
+	session.pop('token',None)
+	session.pop('user',None)
 	return render_template("index.html")
 @app.route('/login')
 def user():
 	user = facebook.get_user_from_cookie(request.cookies,'1420579554861962','b1ffcae9099845e428322a88193bc072')
 	try:
 		token = user.get('access_token')
+		session['token'] = token
 	except AttributeError, e:
 		return redirect('/')
 	graph = facebook.GraphAPI(token)
 	profile = graph.get_object("me")
 	print profile
-	person = users.find({"fb_id":profile.get('id')})[0]
-	if person == None:
+	try:
+		person = users.find({"fb_id":profile.get('id')})[0]
+	except IndexError, e:
 		users.insert({"username":profile.get('username'),"first_name":profile.get('first_name'),"last_name":profile.get('last_name'),
 		"email":profile.get('email'),"fb_id":profile.get('id'),'flashcards':[]})
 		session['user'] = profile.get('id')
 		return redirect('/decks')
-	else:
-		session['user'] = person.get('id')
-		return redirect('/decks')
+
+	session['user'] = person.get('fb_id')
+	print person.get('id')
+	return redirect('/decks')
 	# me = profile.get('first_name') +" "+ profile.get('last_name')
 	# friends = graph.get_connections("me", "friends").get('data')
 	# groups = graph.get_connections("me","groups").get('data')
@@ -49,8 +54,9 @@ def user():
 @app.route('/decks',methods=['GET','POST'])
 def decks():
 	user = session.get('user')
+	#token = session.get('token')
 	if user:
-		return "decks"
+		person = users.find({"fb_id":user})[0]
 	else:
 		return redirect('/')
 @app.route('/add_decks',methods=['GET','POST'])
