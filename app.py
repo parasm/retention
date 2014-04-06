@@ -33,6 +33,7 @@ def insert(flashcard, response=1):
             delta_stage =- 2
     flashcard["stage"] += delta_stage
     flashcard["time"] = time.time() + interval[flashcard["stage"]]
+    flashcard['reminded'] = False
     result = flashcards.find({"id":flashcard["id"]}).limit(1)[0]
     if result == None:
         flashcards.insert(flashcard)

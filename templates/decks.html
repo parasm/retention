@@ -15,7 +15,7 @@
 
 	{% for i in range(0,reminders|length) %}
 	<a href="/study/{{reminders[i]['_id']}}"><div class="reminder-jumbotron decks-jumbotron jumbotron center">
-		<h2>You need to study {{reminders[i]['flashcards']|length}} flashcards in your '{{reminders[i]['deck_name']}}' deck.</h2>
+		<h2>You need to study {{reminders[i]['cards']|length}} flashcards in your '{{reminders[i]['deck_name']}}' deck.</h2>
 	</div></a>
 	{% endfor %}
 

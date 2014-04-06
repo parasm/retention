@@ -126,3 +126,11 @@ hr.index:before { /* Not really supposed to work, but does */
 .custom-submit-btn {
 	font-size: 38px;
 }
+
+.propic {
+	width: 19%;
+}
+
+.question-jumbotron {
+	min-height: 400px !important;
+}
