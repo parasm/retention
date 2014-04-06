@@ -58,6 +58,9 @@ jQuery(document).ready(function(){
 					<div class="col-md-5"><select id="deck-type">
 						<option value="custom">Translate</option>
 						<option value="plain">Plain Deck</option>
+						{% for e in extras %}
+							<option value="{{e}}">{{e.get('name')}}</option>
+						{% endfor %}
 					</select></div>
 					<div class="col-md-1">&nbsp;</div>
 					</h2>
