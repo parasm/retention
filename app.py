@@ -69,7 +69,19 @@ def add_decks():
 	return render_template('add_decks.html')
 @app.route('/add_decks/facebook',methods=['GET','POST'])
 def face():
-	return render_template('facebook.html', groups=[{},{},{}])
+	token = session.get('token')
+	graph = facebook.GraphAPI(token)
+	profile = graph.get_object("me")
+	groups = graph.get_connections("me","groups").get('data')
+	all_people = []
+	gs = [groups]
+	print gs
+	# for g in groups:
+	# 	print graph.get_object(g.get('id'))
+	# 	print g
+	# 	 gs.append(g.get('id'))
+	# 	 all_people.append(graph.get_connections(g.get('id'),"members"))
+	return render_template('facebook.html', groups=[groups])
 @app.route('/add_decks/custom',methods=['GET','POST'])
 def custom():
 	return render_template('custom.html')
