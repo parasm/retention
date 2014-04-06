@@ -130,10 +130,10 @@ def notify():
 					flashcards_due.append(card)
 					card["reminded"] = True
 					flashcards.update({'fb_id':card.get('id')},card)
-			print("sent placeholder")
+			#print("sent placeholder")
 			if flashcard["reminded"] == False:
-				#sendgrid_notification(user, len(flashcards_due))
-				#twilio_notification(user, len(flashcards_due))
+				sendgrid_notification(user, len(flashcards_due))
+				twilio_notification(user, len(flashcards_due))
 @app.route('/add_decks',methods=['GET','POST'])
 def add_decks():
 	return render_template('add_decks.html')
