@@ -31,10 +31,10 @@ def user():
 		users.insert({"username":profile.get('username'),"first_name":profile.get('first_name'),"last_name":profile.get('last_name'),
 		"email":profile.get('email'),"fb_id":profile.get('id'),'flashcards':[]})
 		session['user'] = profile.get('id')
-		return '/decks'
+		return redirect('/decks')
 	else:
 		session['user'] = person.get('id')
-		return '/decks'
+		return redirect('/decks')
 	# me = profile.get('first_name') +" "+ profile.get('last_name')
 	# friends = graph.get_connections("me", "friends").get('data')
 	# groups = graph.get_connections("me","groups").get('data')
@@ -49,7 +49,9 @@ def user():
 def decks():
 	user = session.get('user')
 	if user:
-
+		return "decks"
+	else:
+		return redirect('/')
 @app.route('/add_decks',methods=['GET','POST'])
 def add_decks():
 	return "paras"
