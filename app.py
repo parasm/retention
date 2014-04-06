@@ -69,7 +69,7 @@ def add_decks():
 	return render_template('add_decks.html')
 @app.route('/add_decks/facebook',methods=['GET','POST'])
 def face():
-	return render_template('facebook.html', groups=[{},{},{}])
+	return render_template('facebook.html', groups=[{},{},{},{},{},{},{}],group_count=[45,123,6,234,1234,5,2])
 @app.route('/add_decks/custom',methods=['GET','POST'])
 def custom():
 	return render_template('custom.html')
