@@ -78,7 +78,7 @@ hr.index:before { /* Not really supposed to work, but does */
 
 .choice-jumbotron {
 	background-color: rgba(248, 248, 248, 0.8);
-	margin-top: 50px;	
+	/*margin-top: 50px;	*/
 }
 
 .add-decks {
@@ -93,10 +93,20 @@ hr.index:before { /* Not really supposed to work, but does */
 	border-left: solid;
 }
 
-.choice-links {
+.facebook-link {
+	color: rgb(59, 89, 152);
+}
+
+.facebook-link:hover {
+	color: rgb(51, 78, 136);
+	text-decoration: none;
+}
+
+.custom-link {
 	color: rgb(51, 51, 51);
 }
 
-.choice-links:hover {
+.custom-link:hover {
 	color: rgb(0, 0, 0);
+	text-decoration: none;
 }
