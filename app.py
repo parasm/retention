@@ -23,6 +23,7 @@ def sendgrid_notification(user, numcards):
 	body = 'It\'s time to study. You have ' + str(numcards) + ' flashcards that you should take a look at.\n http://getretention.herokuapp.com/'
 	message = sendgrid.Mail(to=user["email"], subject='GetRetention reminds you to study!', html=body, text=body, from_email='info@getretention.herokuapp.com')
 	status, msg = sg.send(message)
+	return status
 
 def twilio_notification(user, numcards):
 	account = "AC36ddf2336e764b488e813b2941ebfe45"
@@ -30,6 +31,7 @@ def twilio_notification(user, numcards):
 	client = TwilioRestClient(account,token)
 	body = 'It\'s time to study. You have ' + str(numcards) + ' flashcards that you should take a look at.\n http://getretention.herokuapp.com/'
 	message = client.messages.create(to="+12019626168", from_="+15704378644", body=body)
+	return "received"
 
 interval={1:30,2:120,3:300,4:900,5:60*60,6:5*60*60,7:24*60*60,8:5*24*60*60,9:25*24*60*60,10:60*24*60*60}
 
@@ -137,9 +139,11 @@ def notify():
 					card["reminded"] = True
 					flashcards.update({'fb_id':card.get('id')},card)
 			#print("sent placeholder")
-			if flashcard["reminded"] == False:
+			#twilio_notification(user, len(flashcards_due))
+			if card["reminded"] == False:
 				sendgrid_notification(user, len(flashcards_due))
 				twilio_notification(user, len(flashcards_due))
+	return redirect('/')
 @app.route('/add_decks',methods=['GET','POST'])
 def add_decks():
 	return render_template('add_decks.html')
@@ -213,7 +217,8 @@ def inserty():
 		else:
 			correct = False
 		insert(card,response=correct)
-		return redirect('/')
+		# return redirect('/')
+		return
 @app.route('/extensions', methods=['GET','POST'])
 def extend():
 	token = session.get('token')
