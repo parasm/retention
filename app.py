@@ -6,7 +6,7 @@ from pymongo import MongoClient
 import sendgrid
 from bson.objectid import ObjectId
 
-client = MongoClient("mongodb://admin: @oceanic.mongohq.com:10099/retention")
+client = MongoClient("mongodb://admin:@oceanic.mongohq.com:10099/retention")
 db = client.get_default_database()
 users = db.users
 
