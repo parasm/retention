@@ -7,6 +7,8 @@
 		<script type="text/javascript" src="/static/bootstrap.min.js"></script>
 		{% block extras %}{% endblock %}
 	</head>
+	<div class="{% if page=='signup' %}signup{% endif %}">
+		{% if page!='signup' %}
 		<div class="navbar navbar-default navbar-fixed-top">
 			<div class="container">
 		      <div class="navbar-header">
@@ -19,6 +21,8 @@
 		      </div>
 		      <div class="navbar-collapse navbar-responsive-collapse collapse" style="height: 1px;">
 		        <ul class="nav navbar-nav">
+		        	<li><a href="/create">Create a Deck</a></li>
+		        	<li><a href="/decks">My Decks</a></li>
 		        </ul>
 		        <ul class="nav navbar-nav navbar-right">
 		        	<li><a href="/logout" onclick="FB.logout();">Logout</a> </li>
@@ -26,7 +30,7 @@
 		      </div>
 		    </div>
 		</div>
-		<br><br><br><br>
+		<br><br><br><br>{% endif %}
 		<div id="fb-root"></div>
 		<script>
 		  window.fbAsyncInit = function() {
@@ -94,5 +98,6 @@
 		</script>
 		{% block content %}
 		{% endblock %}
+	</div>
 	</body>
 </html>

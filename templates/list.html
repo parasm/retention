@@ -2,9 +2,32 @@
 {% block title %}Retention{% endblock %}
 {% block content %}
 <div class="container">
-{% for i in range(0,count) %}
-	<h2>Group Name: {{groups[i]}}</h2>
-	<h2>{{people[i]}}</h2>
-{% endfor %}
+	<div class="decks-jumbotron jumbotron center" style="margin-top: 25px;">
+		<h1>Decks</h1>
+	</div>
+
+	{% if count==0 %}
+	<div class="decks-jumbotron jumbotron center">
+		<h2>No decks available</h2>
+	</div>
+	{% endif %}
+
+	{% for i in range(0,reminders_count) %}
+	<a href="/study/{{reminders[i]['_id']}}"><div class="reminder-jumbotron decks-jumbotron jumbotron center">
+		<h2>You need to study {{reminders[i]['flashcards']|length}} flashcards in your '{{reminders[i]['deck_name']}}' deck.</h2>
+	</div></a>
+	{% endfor %}
+
+	{% for i in range(0,count) %}
+	<a href="/deck/{{decks[i]['_id']"><div class="decks-jumbotron jumbotron">
+		<div class="row">
+			<h2>
+			<div class="col-md-3">{{decks[i]['deck_name']}}</div>
+			<div class="col-md-7">&nbsp;</div>
+			<div class="col-md-2">{{decks[i]['flashcards']|length}}</div>
+			</h2>
+		</div>
+	</div></a>
+	{% endfor %}
 </div>
 {% endblock %}
