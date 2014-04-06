@@ -129,11 +129,11 @@ def facebook_id(id):
 	for p in members:
 		image_url ='https://graph.facebook.com/'+p.get('id')+'/picture'
 		flash.append({'question':{'type':'image','value':image_url},'answer':{'type':'text','value':p.get('name')}})
-		id = flashcards.insert({'time':time.time(),'username':profile.get('username'),'flashcards':flash,'stage':0,
-			'attempts':0,'deck_name':group.get('name'),'reminded':True,'fb_id':profile.get('fb_id')})
-		person = users.find({'fb_id':profile.get('id')}).limit(1)[0]
-		person['flashcards'].append({'deck_name':group.get('name'),"id":id})
-		users.update({'fb_id':profile.get('fb_id')},person)
+	id = flashcards.insert({'time':time.time(),'username':profile.get('username'),'flashcards':flash,'stage':0,
+		'attempts':0,'deck_name':group.get('name'),'reminded':True,'fb_id':profile.get('fb_id')})
+	person = users.find({'fb_id':profile.get('id')}).limit(1)[0]
+	person['flashcards'].append({'deck_name':group.get('name'),"id":id})
+	users.update({'fb_id':profile.get('fb_id')},person)
 	return redirect('/decks')
 @app.route('/add_decks/custom',methods=['GET','POST'])
 def custom():
