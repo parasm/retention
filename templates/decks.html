@@ -15,21 +15,20 @@
 
 	{% for i in range(0,reminders|length) %}
 	<a href="/study/{{reminders[i]['_id']}}"><div class="reminder-jumbotron decks-jumbotron jumbotron center">
-		<h2>You need to study {{reminders[i]['flashcards']|length}} flashcards in your '{{reminders[i]['deck_name']}}' deck.</h2>
+		<h2>You need to study {{reminders[i]['cards']|length}} flashcards in your '{{reminders[i]['deck_name']}}' deck.</h2>
 	</div></a>
 	{% endfor %}
 
 	{% for i in range(0,decks|length) %}
-	<a href="/deck/{{decks[i]['id']}}"><div class="decks-jumbotron jumbotron">
+	<div class="decks-jumbotron jumbotron">
 		<div class="row">
 			<h2>
 			<div class="col-md-3">{{decks[i]['deck_name']}}</div>
 			<div class="col-md-7">&nbsp;</div>
-			<div class="col-md-2">{{decks[i]['flashcards']|length}}</div>
-			{{decks}}
+			<div class="col-md-2">{{decks[i]['cards']|length}}</div>
 			</h2>
 		</div>
-	</div></a>
+	</div>
 	{% endfor %}
 </div>
 {% endblock %}

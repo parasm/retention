@@ -1,16 +1,129 @@
 {% extends "base.html" %}
-{% block title %}Retention{% endblock %}
+{% block title %}Retention - Study {{flashcards['deck_name']}}{% endblock %}
 {% block extras %}
 <script>
+var cards = [];
+var question = true;
+var index = 0;
 jQuery(document).ready(function(){
-  
+ 	if ({{flashcards['cards']|length}} > 0) {
+ 		{% for flash in flashcards['cards'] %}
+	 		cards.push({
+	 			"question" : {
+	 				"type" : "{{flash['question']['type']|safe}}",
+	 				"value" : "{{flash['question']['value']|safe}}"
+	 			},
+	 			"answer" : {
+	 				"type" : "{{flash['answer']['type']|safe}}",
+	 				"value" : "{{flash['answer']['value']|safe}}"
+	 			},
+	 			"stage" : {{flash['stage']}},
+	 			"attempts" : {{flash['attempts']}}
+	 		})
+	 	{% endfor %}
+ 		updateQuestion(cards[index]);
+ 	}
+ 	else {
+ 		window.location.replace("/");
+ 	}
 });
+
+function updateQuestion(question) {
+	if (question['question']['type'] == 'text') {
+		$('#question').html(question['question']['value']);
+	} else if (question['question']['type'] == 'image') {
+		$('#question').html('<img class="propic" src="' + question["question"]["value"] + '"/>');
+	}
+	
+}
+
+function updateAnswer(answer) {
+	if (answer['answer']['type'] == 'text') {
+		$('#question').html(answer['answer']['value']);
+	} else if (answer['answer']['type'] == 'image') {
+		$('#question').html('<img class="propic" src="' + answer["answer"]["value"] + '"/>');
+	}
+	
+}
+
+function flip() {
+	// if (card['question']['type'] == 'text' && card['question']['value'] == $('#question').html()) {
+	// 	updateAnswer(card)
+	// } else if (card['question']['type'] == 'image' && ('<img class="propic" src="' + card["question"]["value"] + '"/>') == $('#question').html()) {
+	// 	updateAnswer(card)
+	// } else {
+	// 	updateQuestion(card)
+	// }
+	if (question) {
+		updateAnswer(cards[index]);
+		question = false;
+	} else {
+		updateQuestion(cards[index]);
+		question = true;
+	}
+
+}
+
+function nextQuestion() {
+ 	index = index + 1;
+ 	if (index >= cards.length) {
+ 		window.location.replace("localhost:8000/decks");
+ 	} else {
+ 		updateQuestion(cards[index]);
+ 	}
+}
+
+function correct() {
+	var toSend = cards[index];
+	toSend['deck_name'] = "{{flashcards['deck_name']}}";
+	toSend['username'] = "{{flashcards['username']}}";
+	toSend['fb_id'] = "{{flashcards['fb_id']}}";
+	$.ajax({
+		type: 'POST',
+		url: "http://localhost:8000/insert",
+		data: {
+			'flash_card' : toSend,
+			'correct' : true
+		}
+	});
+	nextQuestion();
+}
+
+function wrong() {
+	var toSend = cards[index];
+	toSend['deck_name'] = "{{flashcards['deck_name']}}";
+	toSend['username'] = "{{flashcards['username']}}";
+	toSend['fb_id'] = "{{flashcards['fb_id']}}";
+	$.ajax({
+		type: 'POST',
+		url: "http://localhost:8000/insert",
+		data: {
+			'flash_card' : toSend,
+			'correct' : false
+		}
+	});
+	nextQuestion();
+}
+
 </script>
 {% endblock %}
 {% block content %}
 <div class="container">
-	<div class="decks-jumbotron jumbotron center" style="margin-top: 25px;">
-		<h1>Decks</h1>
+	<div class="question-jumbotron decks-jumbotron jumbotron center" style="margin-top: 25px;">
+		<h1 id="question">Loading...</h1>
+	</div>
+	<div class="decks-jumbotron jumbotron center">
+		<div class="row">
+			<div class="col-md-4" style="text-align: left;">
+				<button class="btn btn-lg btn-warning" onclick="wrong()">I don't remember</button>
+			</div>
+			<div class="col-md-4 center">
+				<button class="btn btn-lg" onclick="flip()">Show me the other side</button>
+			</div>
+			<div class="col-md-4" style="text-align: right;">
+				<button class="btn btn-lg btn-primary" onclick="correct()">I remember</button>
+			</div>
+		</div>
 	</div>
 </div>
 {% endblock %}
