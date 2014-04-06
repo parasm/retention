@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect
+from flask import Flask, render_template, request, redirect, session
 import jinja2
 import os
 import facebook
@@ -10,6 +10,7 @@ client = MongoClient("mongodb://admin:pretzelssux201@oceanic.mongohq.com:10099/r
 db = client.get_default_database()
 users = db.users
 
+app.secret_key = 'paras_is_the_slim_reaper'
 
 app = Flask(__name__)
 
