@@ -134,6 +134,7 @@ def notify():
 			if card["reminded"] == False:
 				sendgrid_notification(user, len(flashcards_due))
 				twilio_notification(user, len(flashcards_due))
+	return "success"
 @app.route('/add_decks',methods=['GET','POST'])
 def add_decks():
 	return render_template('add_decks.html')
