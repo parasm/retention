@@ -85,12 +85,6 @@ def decks():
 	#token = session.get('token')
 	if user:
 		person = users.find({"fb_id":user})[0]
-		flashcards = person.get('flashcards')
-		if flashcards:
-			insertall(users.find({'fb_id':user}))
-			return render_template('decks.html',count=len(flashcards),decks=flashcards)
-		else:
-			return redirect('/add_decks')
 		decks = person.get('flashcards')
 		reminders = flashcards.find({'reminded':True,'fb_id':user})
 		reminders_getted = []
@@ -138,6 +132,9 @@ def facebook_id(id):
 @app.route('/add_decks/custom',methods=['GET','POST'])
 def custom():
 	return render_template('custom.html')
+@app.route('/add_decks/plain',methods=['GET','POST'])
+def plain():
+	return render_template('plain.html')
 @app.route('/token',methods=['GET','POST'])
 def get_token():
 	if request.method == "POST":
