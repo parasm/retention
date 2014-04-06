@@ -16,6 +16,20 @@ flashcards = db.flashcards
 app = Flask(__name__)
 app.secret_key = 'paras_is_the_slim_reaper'
 
+
+def sendgrid_notification(user, numcards):
+	sg = sendgrid.SendGridClient('parasm','bcabooks')
+	body = 'It\'s time to study. You have ' + str(numcards) + ' flashcards that you should take a look at.\n http://getretention.herokuapp.com/'
+	message = sendgrid.Mail(to=user["email"], subject='GetRetention reminds you to study!', html=body, text=body, from_email='info@getretention.herokuapp.com')
+	status, msg = sg.send(message)
+
+def twilio_notification(user, numcards):
+	account = "AC36ddf2336e764b488e813b2941ebfe45"
+	token = "ecbf476f594fefae357cbb70839a5c37"
+	client = TwilioRestClient(account,token)
+	body = 'It\'s time to study. You have ' + str(numcards) + ' flashcards that you should take a look at.\n http://getretention.herokuapp.com/'
+	message = client.messages.create(to="+12019626168", from_="+15704378644", body=body)
+
 interval={1:30,2:120,3:300,4:900,5:60*60,6:5*60*60,7:24*60*60,8:5*24*60*60,9:25*24*60*60,10:60*24*60*60}
 
 #inserts the flashcard into the flashcard database based on correct or incorrect response given by user
@@ -102,7 +116,22 @@ def study(uid):
 	if not from_db:
 		return redirect('/decks')
 	return render_template('study.html',flashcards=from_db)
-
+@app.route('/notify')
+def notify():
+	current_time = time.time()
+	for user in users.find({}):
+		print(user["username"])
+		for flashcard in user["flashcards"]:
+			flashcards_due = []
+			for card in flashcard["cards"]:
+				#print(card)
+				if card["time"] <= current_time:
+					flashcards_due.append(card)
+					card["reminded"] = True
+					flashcards.update({'fb_id':card.get('id')},card)
+			print("sent placeholder")
+			#sendgrid_notification(user, len(flashcards_due))
+			#twilio_notification(user, len(flashcards_due))
 @app.route('/add_decks',methods=['GET','POST'])
 def add_decks():
 	return render_template('add_decks.html')
