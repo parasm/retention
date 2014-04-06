@@ -9,9 +9,14 @@ from bson.objectid import ObjectId
 client = MongoClient("mongodb://admin:pretzelssux201@oceanic.mongohq.com:10099/retention")
 db = client.get_default_database()
 users = db.users
+<<<<<<< HEAD
 flashcards = db.flashcards
+=======
+
+>>>>>>> d87918d126977f91baa6b161fc244a68719136ee
 
 app = Flask(__name__)
+app.secret_key = 'paras_is_the_slim_reaper'
 
 app.secret_key = 'paras_is_the_slim_reaper'
 
