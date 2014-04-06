@@ -37,32 +37,47 @@ interval={0:30, 1:30,2:120,3:300,4:900,5:60*60,6:5*60*60,7:24*60*60,8:5*24*60*60
 
 #inserts the flashcard into the flashcard database based on correct or incorrect response given by user
 def insert(flashcard, response=True):
-    #delta_stage is the change in the memorization stage based on response & current stage
-    if flashcard["stage"] < 5:
-        if response == True:
-            delta_stage = 1
-        else:
-            if flashcard["attempts"] > 0:
-            	delta_stage = -1
-            else:
-            	delta_stage = 0
-    else:
-        if response == True:
-            delta_stage = 2
-        else:
-            delta_stage = -2
-    flashcard["stage"] += delta_stage
-    flashcard["time"] = time.time() + interval[int(flashcard["stage"])]
-    flashcard['reminded'] = False
-    result = flashcards.find({"fb_id":flashcard["fb_id"]}).limit(1)[0]
-    if result == None:
-        flashcards.insert(flashcard)
-    else:
-        flashcards.update({"fb_id":result["fb_id"]},flashcard)
+	#delta_stage is the change in the memorization stage based on response & current stage
+	print flashcard
+	if flashcard["stage"] < 5:
+		if response == True:
+			delta_stage = 1
+		else:
+			if flashcard["attempts"] > 0:
+				delta_stage = -1
+			else:
+				delta_stage = 0
+	else:
+		if response == True:
+			delta_stage = 2
+		else:
+			delta_stage = -2
+	flashcard["stage"] += delta_stage
+	flashcard["time"] = time.time() + interval[int(flashcard["stage"])]
+	flashcard['reminded'] = False
+	try:
+		flashcard['cards']
+	except KeyError:
+		flashcard['cards'] = [
+			{'question' : flashcard['question'],
+			'answer' : flashcard['answer']},
+		]
+		flashcard.remove('question')
+		flashcard.remove('answer')
+
+	try:
+		result = flashcards.find({"fb_id":flashcard["fb_id"],"time":flashcard['time']}).limit(1)[0]
+		if result is None:
+			flashcards.insert(flashcard)
+		else:
+			flashcard['cards'].append(result['cards'])
+			flashcards.update({"fb_id":result["fb_id"]},flashcard)
+	except:
+		flashcards.insert(flashcard)
 
 def insertall(user):
-    for flashcard in user["flashcards"]:
-    	insert(flashcard)
+	for flashcard in user["flashcards"]:
+		insert(flashcard)
 
 @app.route('/')
 def hello():
@@ -79,7 +94,7 @@ def user():
 		return redirect('/')
 	graph = facebook.GraphAPI(token)
 	profile = graph.get_object("me")
-	print profile
+	# print profile
 	try:
 		person = users.find({"fb_id":profile.get('id')})[0]
 	except IndexError, e:
@@ -89,7 +104,7 @@ def user():
 		return redirect('/decks')
 
 	session['user'] = person.get('fb_id')
-	print person.get('id')
+	# print person.get('id')
 	return redirect('/decks')
 	# me = profile.get('first_name') +" "+ profile.get('last_name')
 	# friends = graph.get_connections("me", "friends").get('data')
@@ -162,7 +177,7 @@ def face():
 	groups = graph.get_connections("me","groups").get('data')
 	all_people = []
 	gs = [groups]
-	print gs
+	# print gs
 	group_count = []
 	for g in groups:
 		group_count.append(len(graph.get_connections(g.get('id'),"members").get('data')))

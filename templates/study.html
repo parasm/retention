@@ -66,6 +66,7 @@ function flip() {
 
 function nextQuestion() {
  	index = index + 1;
+ 	alert(index >= cards.length);
  	if (index >= cards.length) {
  		window.location.replace("localhost:8000/decks");
  	} else {
