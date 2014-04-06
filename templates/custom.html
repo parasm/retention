@@ -9,7 +9,7 @@ function newRow (row) {
 		$("#new-deck-form").append('<div class="row flashcard center">\n' +
 					'<h3>\n' +
 					'<div class="col-md-1">&nbsp;</div>\n' +
-					'<div class="col-md-5"><input id="sec" type="text" name="keys[]" onfocus="newRow(' + row + ');"></div>\n' +
+					'<div class="col-md-5"><input id="sec" type="text" name="keys[]" onfocus="newRow(' + currentNum + ');"></div>\n' +
 					'<div class="col-md-5">&nbsp;</div>\n' +
 					'</h3>\n' +
 				'</div>');
