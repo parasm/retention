@@ -4,6 +4,7 @@ import requests
 import time
 import sendgrid
 from twilio.rest import TwilioRestClient
+
 client = MongoClient("mongodb://admin:pretzelssux201@oceanic.mongohq.com:10099/retention")
 db = client.get_default_database()
 users = db.users
@@ -20,8 +21,7 @@ def twilio_notification(user, numcards):
 	token = "ecbf476f594fefae357cbb70839a5c37"
 	client = TwilioRestClient(account,token)
 	body = 'It\'s time to study. You have ' + str(numcards) + ' flashcards that you should take a look at.\n http://getretention.herokuapp.com/'
-	message = client.messages.create(to="+12019626168", from_="+15704378644",
-                                 body=body)
+	message = client.messages.create(to="+12019626168", from_="+15704378644", body=body)
 
 twilio_notification(None, 132)
 #collects all the cards that are currently due for notification and stores them in a list
@@ -38,14 +38,6 @@ def gather():
 					card["reminded"] = True
 					flashcards.update({'fb_id':card.get('id')},card)
 			#sendgrid_notification(user, len(flashcards_due))
-gather()
-print("\n\n\n\n\n\n\n\n")
-
-
-#reminds the user of his due flashcards
-def remind(cards_due):
-	#jared dont be a fuck
-	return 0
 
 # message = "the test message"
 # tickerText = "ticker text message"
