@@ -129,12 +129,12 @@ def facebook_id(id):
 	flash = []		
 	for p in members:
 		image_url ='https://graph.facebook.com/'+p.get('id')+'/picture'
-		flash.append({'question':{'type':'image','value':image_url},'answer':{'type':'text','value':p.get('name')},'stage':0})
-	id = flashcards.insert({'time':time.time(),'username':profile.get('username'),'flashcards':flash,'attempts':0,
-		'deck_name':group.get('name'),'reminded':True,'fb_id':profile.get('id')})
+		flash.append({'question':{'type':'image','value':image_url},'answer':{'type':'text','value':p.get('name')},'attempts':0,'stage':0,'time':int(time.time())})
+	id = flashcards.insert({'username':profile.get('username'),'cards':flash,'deck_name':group.get('name'),
+		'reminded':True,'fb_id':profile.get('id')})
 	person = users.find({'fb_id':profile.get('id')}).limit(1)[0]
-	person['flashcards'].append({'time':time.time(),'username':profile.get('username'),'cards':flash,'attempts':0,
-		'deck_name':group.get('name'),'reminded':True,'fb_id':profile.get('id')})
+	person['flashcards'].append({'time':time.time(),'username':profile.get('username'),'cards':flash,
+		'deck_name':group.get('name'),'fb_id':profile.get('id')})
 	users.update({'fb_id':profile.get('id')},person)
 	return redirect('/decks')
 @app.route('/add_decks/custom',methods=['GET','POST'])
