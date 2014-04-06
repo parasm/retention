@@ -96,6 +96,13 @@ def decks():
 			# return redirect('/add_decks')
 	else:
 		return redirect('/')
+@app.route('/study/<uid>')
+def study(uid):
+	from_db = flashcards.find({"_id":ObjectId(uid)})
+	if not from_db:
+		return redirect('/decks')
+	return render_template('study.html',flashcards=from_db)
+
 @app.route('/add_decks',methods=['GET','POST'])
 def add_decks():
 	return render_template('add_decks.html')

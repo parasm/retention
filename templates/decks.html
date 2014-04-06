@@ -20,12 +20,13 @@
 	{% endfor %}
 
 	{% for i in range(0,decks|length) %}
-	<a href="/deck/{{decks[i]['_id']}}"><div class="decks-jumbotron jumbotron">
+	<a href="/deck/{{decks[i]['id']}}"><div class="decks-jumbotron jumbotron">
 		<div class="row">
 			<h2>
 			<div class="col-md-3">{{decks[i]['deck_name']}}</div>
 			<div class="col-md-7">&nbsp;</div>
 			<div class="col-md-2">{{decks[i]['flashcards']|length}}</div>
+			{{decks}}
 			</h2>
 		</div>
 	</div></a>
