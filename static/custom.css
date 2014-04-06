@@ -1,8 +1,77 @@
-h1{
+h1 {
 	text-align: center;
 	font-size: 70px;
 }
-.center{
+.center {
 	text-align: center;
 	margin: 0 auto;
+}
+
+.signup {
+	background: url('../static/classroom.JPG') no-repeat center center fixed;
+	background-size: cover;
+	min-height: 100%;
+	width: 100%;
+}
+
+.signup-jumbotron {
+	/*background-color: rgba(236, 240, 241, 0.8);*/
+	background-color: rgba(248, 248, 248, 0.8);
+	margin-top: 50px;
+	padding-top: 20px;
+	padding-bottom: 20px;
+	width: 50%;
+	position: relative;
+	top: 36px;
+}
+
+.signup-btn {
+	/*position: relative;
+	top: 170px;*/
+	font-size: 30px;
+	opacity: .9;
+}
+
+.signup-btn a {
+	background-color: rgb(29, 29, 29);
+	border: none;
+}
+.signup-btn a:hover {
+	background-color: rgb(5, 5, 5);
+}
+
+hr.index {
+	height: 30px;
+	border-style: solid;
+	border-color: black;
+	border-width: 1px 0 0 0;
+	border-radius: 20px;
+}
+hr.index:before { /* Not really supposed to work, but does */
+	display: block;
+	content: "";
+	height: 30px;
+	margin-top: -31px;    
+	border-style: solid;
+	border-color: black;
+	border-width: 0 0 1px 0;
+	border-radius: 20px;
+}
+
+.caption {
+	font-size: 24px;
+}
+
+.decks-jumbotron {
+	background-color: rgba(248, 248, 248, 0.8);
+	margin-top: 50px;
+	/*padding-top: 20px;*/
+	/*padding-bottom: 20px;*/
+	/*width: 50%;*/
+	/*position: relative;*/
+	/*top: 36px;*/
+}
+
+.reminder-jumbotron {
+	background-color: rgba(255, 173, 173, 0.8);
 }
