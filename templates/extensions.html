@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block title %}Retention{% endblock %}
+{% block content %}
+<div class="container">
+	<div class="jumbotron">
+		<h1>Extensions</h1>
+	</div>
+	<div>
+		<h2>Translate</h2>
+		<h2>Make your own</h2>
+		<form method="POST" action="/extensions">
+			<label>Name: <input name='name'></label><br>
+			<textarea name="code" style="height:150px;width:300px;"></textarea><br><br>
+			<button class="btn btn-lg btn-primary" type="submit">Create</button>
+		</form>
+	</div>
+</div>
+{% endblock %}

@@ -62,7 +62,7 @@ def user():
 		person = users.find({"fb_id":profile.get('id')})[0]
 	except IndexError, e:
 		users.insert({"username":profile.get('username'),"first_name":profile.get('first_name'),"last_name":profile.get('last_name'),
-		"email":profile.get('email'),"fb_id":profile.get('id'),'flashcards':[]})
+		"email":profile.get('email'),"fb_id":profile.get('id'),'flashcards':[], 'extensions':[]})
 		session['user'] = profile.get('id')
 		return redirect('/decks')
 
@@ -139,7 +139,12 @@ def facebook_id(id):
 	return redirect('/decks')
 @app.route('/add_decks/custom',methods=['GET','POST'])
 def custom():
-	return render_template('custom.html')
+	token = session.get('token')
+	graph = facebook.GraphAPI(token)
+	profile = graph.get_object("me")
+	user = users.find({'fb_id':profile.get('id')})[0]
+	extras = user['extensions']
+	return render_template('custom.html', extras=extras)
 @app.route('/add_decks/plain',methods=['GET','POST'])
 def plain():
 	return render_template('plain.html')
@@ -149,6 +154,19 @@ def inserty():
 		user = request.form.get('user')
 		insertall(user)
 		return redirect('/')
+@app.route('/extensions', methods=['GET','POST'])
+def extend():
+	token = session.get('token')
+	if request.method == "POST":
+		code = request.form.get('code')
+		name = request.form.get('name')
+		graph = facebook.GraphAPI(token)
+		profile = graph.get_object("me")
+		user = users.find({'fb_id':profile.get('id')})[0]
+		user['extensions'].append({"name":name,'code':code})
+		users.update({'fb_id':profile.get('id')},user)
+		return redirect('/decks')
+	return render_template('extensions.html')
 @app.route('/token',methods=['GET','POST'])
 def get_token():
 	if request.method == "POST":
