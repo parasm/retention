@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block title %}Retention{% endblock %}
+{% block content %}
+<div class="container">
+	<div class="decks-jumbotron jumbotron center" style="margin-top: 25px;">
+		<h1>Facebook Groups</h1>
+	</div>
+
+	{% if groups|length==0 %}
+	<div class="decks-jumbotron jumbotron center">
+		<h2>Could not find any groups</h2>
+	</div>
+	{% endif %}
+
+	{% if groups|length != 0 %}
+	<div class="decks-jumbotron jumbotron center">
+	{% for i in range(0,groups|length,3) %}
+	<div class="row groups">
+		<div class="col-md-4"><a href="/add_decks/facebook/{{groups[i]['id']}}"><span class="count">5</span><br/><span class="name">Group Name is Here</span></a></div>
+		<div class="col-md-4 middle"><a href="/add_decks/facebook/{{groups[i+1]['id']}}"><span class="count">5</span><br/><span class="name">Group Name is Here</span></a></div>
+		<div class="col-md-4"><a href="/add_decks/facebook/{{groups[i+2]['id']}}"><span class="count">5</span><br/><span class="name">Group Name is Here</span></a></div>
+	</div>
+	{% endfor %}
+	</div>
+	{% endif %}
+</div>
+{% endblock %}

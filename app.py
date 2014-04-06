@@ -69,10 +69,10 @@ def add_decks():
 	return render_template('add_decks.html')
 @app.route('/add_decks/facebook',methods=['GET','POST'])
 def face():
-	return "facebook"
+	return render_template('facebook.html', groups=[{},{},{}])
 @app.route('/add_decks/custom',methods=['GET','POST'])
 def custom():
-	return "custom"
+	return render_template('custom.html')
 @app.route('/token',methods=['GET','POST'])
 def get_token():
 	if request.method == "POST":

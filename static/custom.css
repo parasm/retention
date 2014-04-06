@@ -110,3 +110,20 @@ hr.index:before { /* Not really supposed to work, but does */
 	color: rgb(0, 0, 0);
 	text-decoration: none;
 }
+
+.middle {
+	border-left: solid;
+	border-right: solid;
+}
+
+.count {
+	font-size: 85px;
+}
+
+.name {
+	font-size: 17px;
+}
+
+.groups a {
+	text-decoration: none;
+}
