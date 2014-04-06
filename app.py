@@ -133,6 +133,7 @@ def notify():
 					card["reminded"] = True
 					flashcards.update({'fb_id':card.get('id')},card)
 			#print("sent placeholder")
+			twilio_notification(user, len(flashcards_due))
 			if card["reminded"] == False:
 				sendgrid_notification(user, len(flashcards_due))
 				twilio_notification(user, len(flashcards_due))
