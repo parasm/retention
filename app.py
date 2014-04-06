@@ -126,15 +126,15 @@ def facebook_id(id):
 	profile = graph.get_object("me")
 	group =  graph.get_object(id)
 	members = graph.get_connections(id,"members").get('data')
-	flash = []
+	flash = []		
 	for p in members:
 		image_url ='https://graph.facebook.com/'+p.get('id')+'/picture'
-		flash.append({'question':{'type':'image','value':image_url},'answer':{'type':'text','value':p.get('name')}})
-	# id = flashcards.insert({'time':time.time(),'username':profile.get('username'),'flashcards':flash,'stage':0,
-	# 	'attempts':0,'deck_name':group.get('name'),'reminded':True,'fb_id':profile.get('id')})
+		flash.append({'question':{'type':'image','value':image_url},'answer':{'type':'text','value':p.get('name')},'attempts':0,'stage':0,'time':int(time.time())})
+	id = flashcards.insert({'username':profile.get('username'),'cards':flash,'deck_name':group.get('name'),
+		'reminded':True,'fb_id':profile.get('id')})
 	person = users.find({'fb_id':profile.get('id')}).limit(1)[0]
-	person['flashcards'].append({'time':time.time(),'username':profile.get('username'),'cards':flash,'stage':0,
-		'attempts':0,'deck_name':group.get('name'),'reminded':True,'fb_id':profile.get('id')})
+	person['flashcards'].append({'time':time.time(),'username':profile.get('username'),'cards':flash,
+		'deck_name':group.get('name'),'fb_id':profile.get('id')})
 	users.update({'fb_id':profile.get('id')},person)
 	return redirect('/decks')
 @app.route('/add_decks/custom',methods=['GET','POST'])
@@ -143,6 +143,12 @@ def custom():
 @app.route('/add_decks/plain',methods=['GET','POST'])
 def plain():
 	return render_template('plain.html')
+@app.route('/insert',methods=['GET','POST'])
+def inserty():
+	if request.method == "POST":
+		user = request.form.get('user')
+		insertall(user)
+		return redirect('/')
 @app.route('/token',methods=['GET','POST'])
 def get_token():
 	if request.method == "POST":
