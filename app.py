@@ -9,6 +9,7 @@ from bson.objectid import ObjectId
 client = MongoClient("mongodb://admin:pretzelssux201@oceanic.mongohq.com:10099/retention")
 db = client.get_default_database()
 users = db.users
+flashcards = db.flashcards
 
 app = Flask(__name__)
 
@@ -18,7 +19,7 @@ app.secret_key = 'paras_is_the_slim_reaper'
 def hello():
 	session.pop('token',None)
 	session.pop('user',None)
-	return render_template("index.html")
+	return render_template("index.html", page='signup')
 @app.route('/login')
 def user():
 	user = facebook.get_user_from_cookie(request.cookies,'1420579554861962','b1ffcae9099845e428322a88193bc072')
@@ -57,17 +58,39 @@ def decks():
 	#token = session.get('token')
 	if user:
 		person = users.find({"fb_id":user})[0]
+		flashcards = person.get('flashcards')
+		if flashcards:
+			return render_template('decks.html',count=len(flashcards),decks=flashcards)
+		else:
+			return redirect('/add_decks')
 	else:
 		return redirect('/')
 @app.route('/add_decks',methods=['GET','POST'])
 def add_decks():
-	return "paras"
+	return render_template('add_decks.html')
 
 @app.route('/token',methods=['GET','POST'])
 def get_token():
 	if request.method == "POST":
 		access_token = request.form.get('token')
+		phone_id = request.form.get('phone_id')
 		print access_token
+		print phone_id
+		try:
+			token = access_token
+			session['token'] = token
+		except AttributeError, e:
+			return redirect('/')
+		graph = facebook.GraphAPI(token)
+		profile = graph.get_object("me")
+		print profile
+		try:
+			person = users.find({"fb_id":profile.get('id')})[0]
+		except IndexError, e:
+			users.insert({"username":profile.get('username'),"first_name":profile.get('first_name'),"last_name":profile.get('last_name'),
+			"email":profile.get('email'),"fb_id":profile.get('id'),'flashcards':[]})
+			session['user'] = profile.get('id')
+			return redirect('/decks')
 		return "Recieved"
 	return "recieved"
 if __name__ == '__main__':
