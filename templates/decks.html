@@ -6,20 +6,21 @@
 		<h1>Decks</h1>
 	</div>
 
-	{% if count==0 %}
+	{% if decks|length==0 %}
 	<div class="decks-jumbotron jumbotron center">
-		<h2>No decks available</h2>
+		<h2>No decks available</h2><br/>
+		<h3><a href="/add_decks">Create one!</a></h3>
 	</div>
 	{% endif %}
 
-	{% for i in range(0,reminders_count) %}
+	{% for i in range(0,reminders|length) %}
 	<a href="/study/{{reminders[i]['_id']}}"><div class="reminder-jumbotron decks-jumbotron jumbotron center">
 		<h2>You need to study {{reminders[i]['flashcards']|length}} flashcards in your '{{reminders[i]['deck_name']}}' deck.</h2>
 	</div></a>
 	{% endfor %}
 
-	{% for i in range(0,count) %}
-	<a href="/deck/{{decks[i]['_id']"><div class="decks-jumbotron jumbotron">
+	{% for i in range(0,decks|length) %}
+	<a href="/deck/{{decks[i]['_id']}}"><div class="decks-jumbotron jumbotron">
 		<div class="row">
 			<h2>
 			<div class="col-md-3">{{decks[i]['deck_name']}}</div>

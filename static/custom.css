@@ -122,3 +122,7 @@ hr.index:before { /* Not really supposed to work, but does */
 .groups a {
 	text-decoration: none;
 }
+
+.custom-submit-btn {
+	font-size: 38px;
+}
