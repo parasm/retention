@@ -34,15 +34,15 @@ def twilio_notification(user, numcards):
 interval={1:30,2:120,3:300,4:900,5:60*60,6:5*60*60,7:24*60*60,8:5*24*60*60,9:25*24*60*60,10:60*24*60*60}
 
 #inserts the flashcard into the flashcard database based on correct or incorrect response given by user
-def insert(flashcard, response=1):
+def insert(flashcard, response=True):
     #delta_stage is the change in the memorization stage based on response & current stage
     if flashcard["stage"] < 5:
-        if response == true:
+        if response == True:
             delta_stage = 1
         else:
             delta_stage =- 1
     else:
-        if response == true:
+        if response == True:
             delta_stage = 2
         else:
             delta_stage =- 2
@@ -131,7 +131,7 @@ def notify():
 					card["reminded"] = True
 					flashcards.update({'fb_id':card.get('id')},card)
 			#print("sent placeholder")
-			if flashcard["reminded"] == False:
+			if card["reminded"] == False:
 				sendgrid_notification(user, len(flashcards_due))
 				twilio_notification(user, len(flashcards_due))
 @app.route('/add_decks',methods=['GET','POST'])
