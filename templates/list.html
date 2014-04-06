@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% block title %}Retention{% endblock %}
+{% block content %}
+<div class="container">
+{% for i in range(0,count) %}
+	<h2>Group Name: {{groups[i]}}</h2>
+	<h2>{{people[i]}}</h2>
+{% endfor %}
+</div>
+{% endblock %}
