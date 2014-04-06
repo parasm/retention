@@ -186,7 +186,7 @@ def plain():
 def inserty():
 	if request.method == "POST":
 		user = request.form.get('user')
-		insertall(user)
+		print user
 		return redirect('/')
 @app.route('/extensions', methods=['GET','POST'])
 def extend():
