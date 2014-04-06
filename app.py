@@ -4,6 +4,7 @@ import os
 import facebook
 from pymongo import MongoClient
 import sendgrid
+from twilio.rest import TwilioRestClient
 import time
 import requests
 from bson.objectid import ObjectId
@@ -130,8 +131,9 @@ def notify():
 					card["reminded"] = True
 					flashcards.update({'fb_id':card.get('id')},card)
 			print("sent placeholder")
-			#sendgrid_notification(user, len(flashcards_due))
-			#twilio_notification(user, len(flashcards_due))
+			if flashcard["reminded"] == False:
+				#sendgrid_notification(user, len(flashcards_due))
+				#twilio_notification(user, len(flashcards_due))
 @app.route('/add_decks',methods=['GET','POST'])
 def add_decks():
 	return render_template('add_decks.html')
