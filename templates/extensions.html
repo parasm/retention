@@ -6,14 +6,15 @@
 {% endblock %}
 {% block content %}
 <div class="container">
-	<div class="jumbotron">
+	<div class="decks-jumbotron jumbotron center">
 		<h1>Extensions</h1>
 	</div>
-	<div>
+	<div class="decks-jumbotron jumbotron center">
 		<h2>Make your own</h2>
+		<br/><br/>
 		<form method="POST" action="/extensions">
-			<label>Name: <input name='name'></label><br>
-			<textarea name="code" style="height:150px;width:300px;" placeholder="function <name>(word){ return value }"></textarea><br><br>
+			<label>Name: <input name='name'></label><br><br/>
+			<textarea name="code" style="height:300px;width:600px;font-family:monospace;" placeholder="function <name>(word){ return value }"></textarea><br><br>
 			<button class="btn btn-lg btn-primary" type="submit">Create</button>
 		</form>
 	</div>
