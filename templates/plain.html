@@ -9,8 +9,9 @@ function newRow (row) {
 		$("#new-deck-form").append('<div class="row flashcard center">\n' +
 					'<h3>\n' +
 					'<div class="col-md-1">&nbsp;</div>\n' +
-					'<div class="col-md-5"><input type="text" name="keys[]" onfocus="newRow(' + row + ');"></div>\n' +
-					'<div class="col-md-5">&nbsp;</div>\n' +
+					'<div class="col-md-5"><input type="text" name="keys[]"></div>\n' +
+					'<div class="col-md-5"><input type="text" class="value" name="values[]" onfocus="newRow(' + currentNum + ')"></div>\n' +
+					'<div class="col-md-1"></div>\n' +
 					'</h3>\n' +
 				'</div>');
 	}
@@ -18,8 +19,8 @@ function newRow (row) {
 
 jQuery(document).ready(function(){
   $("#deck-type").change(function() {
-    if ($(this).val() == 'plain') {
-    	window.location.href = "/add_decks/plain";
+    if ($(this).val() == 'custom') {
+    	window.location.href = "/add_decks/custom";
     }
   });
 });
@@ -28,7 +29,7 @@ jQuery(document).ready(function(){
 {% block content %}
 <div class="container">
 	<div class="decks-jumbotron jumbotron center" style="margin-top: 25px;">
-		<h1>Create a Custom Deck</h1>
+		<h1>Create a Plain Deck</h1>
 	</div>
 
 	<div class="decks-jumbotron jumbotron center">
@@ -56,8 +57,8 @@ jQuery(document).ready(function(){
 					<div class="col-md-1">&nbsp;</div>
 					<div class="col-md-5">&nbsp;</div>
 					<div class="col-md-5"><select id="deck-type">
-						<option value="custom">Translate</option>
 						<option value="plain">Plain Deck</option>
+						<option value="custom">Custom App Powered Deck</option>
 					</select></div>
 					<div class="col-md-1">&nbsp;</div>
 					</h2>
@@ -67,7 +68,7 @@ jQuery(document).ready(function(){
 					<h3>
 					<div class="col-md-1">&nbsp;</div>
 					<div class="col-md-5"><input type="text" name="keys[]"></div>
-					<div class="col-md-5">&nbsp;</div>
+					<div class="col-md-5"><input type="text" class="value" name="values[]" onfocus="newRow(1)"></div>
 					<div class="col-md-1"></div>
 					</h3>
 				</div>
