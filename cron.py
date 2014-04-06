@@ -16,3 +16,8 @@ def gather():
 				card["reminded"] = true
 				flashcards.update("_id":card["_id"],card)
 	return cards_due
+
+#reminds the user of his due flashcards
+def remind(cards_due):
+	#jared dont be a fuck
+	return 0
