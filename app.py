@@ -143,9 +143,12 @@ def custom():
 @app.route('/add_decks/plain',methods=['GET','POST'])
 def plain():
 	return render_template('plain.html')
-@app.route('/insert')
+@app.route('/insert',methods=['GET','POST'])
 def inserty():
-
+	if request.method == "POST":
+		user = request.form.get('user')
+		insertall(user)
+		return redirect('/')
 @app.route('/token',methods=['GET','POST'])
 def get_token():
 	if request.method == "POST":
