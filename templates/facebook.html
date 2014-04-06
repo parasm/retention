@@ -15,10 +15,22 @@
 	{% if groups|length != 0 %}
 	<div class="decks-jumbotron jumbotron center">
 	{% for i in range(0,groups|length,3) %}
-	<div class="row groups">
-		<div class="col-md-4"><a href="/add_decks/facebook/{{groups[i]['id']}}"><span class="count">5</span><br/><span class="name">Group Name is Here</span></a></div>
-		<div class="col-md-4 middle"><a href="/add_decks/facebook/{{groups[i+1]['id']}}"><span class="count">5</span><br/><span class="name">Group Name is Here</span></a></div>
-		<div class="col-md-4"><a href="/add_decks/facebook/{{groups[i+2]['id']}}"><span class="count">5</span><br/><span class="name">Group Name is Here</span></a></div>
+	<div class="row groups groups-left">
+		<div class="col-md-4"><a href="/add_decks/facebook/{{groups[i]['id']}}"><span class="count">{{group_count[i]}}</span><br/><span class="name">{{groups[i]['name']}}</span></a></div>
+		<div class="col-md-4 middle">
+		{% if (groups|length)>=i+1 and (group_count|length)>i+1 %}
+		<a href="/add_decks/facebook/{{groups[i+1]['id']}}"><span class="count">{{group_count[i+1]}}</span><br/><span class="name">{{groups[i+1]['name']}}</span></a>
+		{% else %}
+		&nbsp;
+		{% endif %}
+		</div>
+		<div class="col-md-4 groups-right">
+		{% if (groups|length)>=i+2 and (group_count|length)>i+2 %}
+		<a href="/add_decks/facebook/{{groups[i+2]['id']}}"><span class="count">{{group_count[i+2]}}</span><br/><span class="name">{{groups[i+2]['name']}}</span></a>
+		{% else %}
+		&nbsp;
+		{% endif %}
+		</div>
 	</div>
 	{% endfor %}
 	</div>
