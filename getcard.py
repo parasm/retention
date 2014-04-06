@@ -9,16 +9,11 @@ client = MongoClient("mongodb://admin:pretzelssux201@oceanic.mongohq.com:10099/r
 db = client.get_default_database()
 queue = db.queue
 
-flashcards = None
-
-def setup():
-    global flashcards = Queue.PriorityQueue()
-
 #intervals based on 30s, 2m, 5m, 15m, 1h, 5h, 1d, 5d, 25d, 2mo.
 interval={1:30,2:120,3:300,4:900,5:60*60,6:5*60*60,7:24*60*60,8:5*24*60*60,9:25*24*60*60,10:60*24*60*60}
 
-#inserts the flashcard into the flashcard queue based on correct or incorrect response given by user
-def insert(flashcard, flashcards, response=1):
+#inserts the flashcard into the flashcard database based on correct or incorrect response given by user
+def insert(flashcard, response=1):
 
     #delta_stage is the change in the memorization stage based on response & current stage
     if flashcard["stage"] < 5:
@@ -39,10 +34,10 @@ def insert(flashcard, flashcards, response=1):
     else:
         queue.update("_id":result["_id"],flashcard)
 
-#inserts all of the retrieved JSON into queue
-def insertall(retrievedlist, flashcards):
+#inserts all of the retrieved JSON into database
+def insertall(retrievedlist):
     for flashcard in retrievedlist:
-        insert(flashcard, flashcards)
+        insert(flashcard)
 
 #some thing along the lines of this...
 # def run():
