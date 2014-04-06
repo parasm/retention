@@ -98,7 +98,7 @@ def decks():
 		return redirect('/')
 @app.route('/study/<uid>')
 def study(uid):
-	from_db = flashcards.find({"_id":ObjectId(uid)})
+	from_db = flashcards.find({"_id":ObjectId(uid)})[0]
 	if not from_db:
 		return redirect('/decks')
 	return render_template('study.html',flashcards=from_db)
