@@ -4,6 +4,7 @@ import os
 import facebook
 from pymongo import MongoClient
 import sendgrid
+import time
 from bson.objectid import ObjectId
 
 client = MongoClient("mongodb://admin:pretzelssux201@oceanic.mongohq.com:10099/retention")
@@ -81,6 +82,16 @@ def face():
 	for g in groups:
 		group_count.append(len(graph.get_connections(g.get('id'),"members").get('data')))
 	return render_template('facebook.html', groups=groups,group_count=group_count)
+@app.route('/add_decks/facebook/<id>')
+def facebook_id(id):
+	token = session.get('token')
+	graph = facebook.GraphAPI(token)
+	profile = graph.get_object("me")
+	print graph.get_object(id)
+	print graph.get_connections(id,"members").get('data')
+	# flashcards.insert({'time':time.time(),'username':profile.get('username'),'flashcards':None,'stage':0,
+	# 	'attempts':0,'deck_name':group_name,reminded:True})
+	return redirect('/')
 @app.route('/add_decks/custom',methods=['GET','POST'])
 def custom():
 	return render_template('custom.html')
