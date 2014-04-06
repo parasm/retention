@@ -34,26 +34,31 @@ def twilio_notification(user, numcards):
 interval={1:30,2:120,3:300,4:900,5:60*60,6:5*60*60,7:24*60*60,8:5*24*60*60,9:25*24*60*60,10:60*24*60*60}
 
 #inserts the flashcard into the flashcard database based on correct or incorrect response given by user
-def insert(flashcard, response=1):
+def insert(flashcard, response=True):
     #delta_stage is the change in the memorization stage based on response & current stage
     if flashcard["stage"] < 5:
-        if response == true:
+        if response == True:
             delta_stage = 1
         else:
-            delta_stage =- 1
+            if flashcard["attempts"] > 0:
+            	delta_stage = -1
+            else:
+            	delta_stage = 0
     else:
-        if response == true:
+        if response == True:
             delta_stage = 2
         else:
-            delta_stage =- 2
+            delta_stage = -2
     flashcard["stage"] += delta_stage
-    flashcard["time"] = time.time() + interval[flashcard["stage"]]
+    print flashcard["stage"]
+    flashcard["time"] = time.time() + interval[int(flashcard["stage"])]
     flashcard['reminded'] = False
-    result = flashcards.find({"id":flashcard["id"]}).limit(1)[0]
+    result = flashcards.find({"fb_id":flashcard["fb_id"]}).limit(1)[0]
     if result == None:
         flashcards.insert(flashcard)
     else:
-        flashcards.update({"_id":result["_id"]},flashcard)
+        flashcards.update({"fb_id":result["fb_id"]},flashcard)
+
 def insertall(user):
     for flashcard in user["flashcards"]:
     	insert(flashcard)
@@ -183,8 +188,31 @@ def plain():
 @app.route('/insert',methods=['GET','POST'])
 def inserty():
 	if request.method == "POST":
-		user = request.form.get('user')
-		insertall(user)
+		card = {
+			'deck_name' : request.form.get('flash_card[deck_name]'),
+			'question' : {
+				'type' : request.form.get('flash_card[question][type]'),
+				'value' : request.form.get('flash_card[question][value]')
+			},
+			'answer' : {
+				'value' : request.form.get('flash_card[answer][value]'),
+				'type' : request.form.get('flash_card[answer][type]')
+			},
+			'stage' : int(request.form.get('flash_card[stage]')),
+			'attempts' : int(request.form.get('flash_card[attempts]')),
+			'username' : request.form.get('flash_card[username]'),
+			'fb_id' : request.form.get('flash_card[fb_id]'),
+		}
+		# for param in request.form:
+		# 	parts = param.split('[')
+		# 	if parts[0] != 'user':
+		# 		continue
+		correct = request.form.get('correct')
+		if correct.lower() == 'true':
+			correct = True
+		else:
+			correct = False
+		insert(card,response=correct)
 		return redirect('/')
 @app.route('/extensions', methods=['GET','POST'])
 def extend():

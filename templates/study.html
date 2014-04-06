@@ -16,7 +16,10 @@ jQuery(document).ready(function(){
 	 			"answer" : {
 	 				"type" : "{{flash['answer']['type']|safe}}",
 	 				"value" : "{{flash['answer']['value']|safe}}"
-	 			}})
+	 			},
+	 			"stage" : {{flash['stage']}},
+	 			"attempts" : {{flash['attempts']}}
+	 		})
 	 	{% endfor %}
  		updateQuestion(cards[index]);
  	}
@@ -68,35 +71,33 @@ function nextQuestion() {
 
 function correct() {
 	var toSend = cards[index];
-	toSend['attempts'] = {{flashcards['attempts']}} + 1;
 	toSend['deck_name'] = "{{flashcards['deck_name']}}";
-	toSend['stage'] = {{flashcards['stage']}}
-	toSend['username'] = {{flashcards['username']}}
-	toSend['stage'] = {{flashcards['stage']}}
+	toSend['username'] = "{{flashcards['username']}}";
+	toSend['fb_id'] = "{{flashcards['fb_id']}}";
 	$.ajax({
+		type: 'POST',
 		url: "http://localhost:8000/insert",
 		data: {
-			'user' : toSend,
+			'flash_card' : toSend,
 			'correct' : true
 		}
-	})
+	});
 	nextQuestion();
 }
 
 function wrong() {
 	var toSend = cards[index];
-	toSend['attempts'] = {{flashcards['attempts']}} + 1;
 	toSend['deck_name'] = "{{flashcards['deck_name']}}";
-	toSend['stage'] = {{flashcards['stage']}}
-	toSend['username'] = {{flashcards['username']}}
-	toSend['stage'] = {{flashcards['stage']}}
+	toSend['username'] = "{{flashcards['username']}}";
+	toSend['fb_id'] = "{{flashcards['fb_id']}}";
 	$.ajax({
+		type: 'POST',
 		url: "http://localhost:8000/insert",
 		data: {
-			'user' : toSend,
+			'flash_card' : toSend,
 			'correct' : false
 		}
-	})
+	});
 	nextQuestion();
 }
 
