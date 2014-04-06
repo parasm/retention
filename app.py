@@ -21,22 +21,39 @@ def user():
 	user = facebook.get_user_from_cookie(request.cookies,'1420579554861962','b1ffcae9099845e428322a88193bc072')
 	try:
 		token = user.get('access_token')
-		print token
 	except AttributeError, e:
 		return redirect('/')
 	graph = facebook.GraphAPI(token)
 	profile = graph.get_object("me")
 	print profile
-	me = profile.get('first_name') +" "+ profile.get('last_name')
-	friends = graph.get_connections("me", "friends").get('data')
-	groups = graph.get_connections("me","groups").get('data')
-	all_people = []
-	gs = []
-	for g in groups:
-		#print graph.get_object(g.get('id'))
-		gs.append(g.get('id'))
-		all_people.append(graph.get_connections(g.get('id'),"members"))
-	return render_template('list.html',groups=gs, people=all_people,count=len(groups))
+	person = users.find({"fb_id":profile.get('id')})[0]
+	if person == None:
+		users.insert({"username":profile.get('username'),"first_name":profile.get('first_name'),"last_name":profile.get('last_name'),
+		"email":profile.get('email'),"fb_id":profile.get('id'),'flashcards':[]})
+		session['user'] = profile.get('id')
+		return '/decks'
+	else:
+		session['user'] = person.get('id')
+		return '/decks'
+	# me = profile.get('first_name') +" "+ profile.get('last_name')
+	# friends = graph.get_connections("me", "friends").get('data')
+	# groups = graph.get_connections("me","groups").get('data')
+	# all_people = []
+	# gs = []
+	# for g in groups:
+	# 	#print graph.get_object(g.get('id'))
+	# 	gs.append(g.get('id'))
+	# 	all_people.append(graph.get_connections(g.get('id'),"members"))
+	# return render_template('list.html',groups=gs, people=all_people,count=len(groups))
+@app.route('/decks',methods=['GET','POST'])
+def decks():
+	user = session.get('user')
+	if user:
+
+@app.route('/add_decks',methods=['GET','POST'])
+def add_decks():
+	return "paras"
+
 @app.route('/token',methods=['GET','POST'])
 def get_token():
 	if request.method == "POST":
