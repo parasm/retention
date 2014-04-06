@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+{% block title %}Retention{% endblock %}
+{% block extras %}
+<script>
+var currentNum = 1;
+function newRow (row) {
+	if (row == currentNum) {
+		currentNum += 1;
+		$("#new-deck-form").append('<div class="row flashcard center">\n' +
+					'<h3>\n' +
+					'<div class="col-md-1">&nbsp;</div>\n' +
+					'<div class="col-md-5"><input type="text" name="keys[]"></div>\n' +
+					'<div class="col-md-5"><input type="text" name="values[]" onfocus="newRow(' + currentNum + ')"></div>\n' +
+					'<div class="col-md-1"></div>\n' +
+					'</h3>\n' +
+				'</div>');
+	}
+};
+</script>
+{% endblock %}
+{% block content %}
+<div class="container">
+	<div class="decks-jumbotron jumbotron center" style="margin-top: 25px;">
+		<h1>Create a Custom Deck</h1>
+	</div>
+
+	<div class="decks-jumbotron jumbotron center">
+		<form action="/add_decks/custom" method="POST">
+			<div id="new-deck-form">
+				<div class="row">
+					<h2>
+					<div class="col-md-2">&nbsp;</div>
+					<div class="col-md-3"><label for="deck-title">Deck Title:</label></div>
+					<div class="col-md-4"><input type="text" id="deck-title" name="title"></div>
+					<div class="col-md-2">&nbsp;</div>
+					</h2>
+				</div>
+				<br/><br/><br/>
+				<div class="row">
+					<h2>
+					<div class="col-md-1">&nbsp;</div>
+					<div class="col-md-5">Term</div>
+					<div class="col-md-5">Definition</div>
+					<div class="col-md-1">&nbsp;</div>
+					</h2>
+				</div>
+				<hr>
+				<div class="row flashcard center">
+					<h3>
+					<div class="col-md-1">&nbsp;</div>
+					<div class="col-md-5"><input type="text" name="keys[]"></div>
+					<div class="col-md-5"><input type="text" name="values[]" onfocus="newRow(1)"></div>
+					<div class="col-md-1"></div>
+					</h3>
+				</div>
+			</div>
+			<br/><br/><br/>
+			<div class="row">
+				<div class="col-md-3">&nbsp;</div>
+				<div class="col-md-6"><button class="custom-submit-btn btn btn-lg btn-primary" type="submit">Submit</button></div>
+				<div class="col-md-3">&nbsp;</div>
+			</div>
+		</form>
+	</div>
+</div>
+{% endblock %}
