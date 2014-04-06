@@ -16,7 +16,7 @@ app = Flask(__name__)
 @app.route('/')
 def hello():
 	return render_template("index.html")
-@app.route('/user')
+@app.route('/login')
 def user():
 	user = facebook.get_user_from_cookie(request.cookies,'1420579554861962','b1ffcae9099845e428322a88193bc072')
 	try:
@@ -26,6 +26,7 @@ def user():
 		return redirect('/')
 	graph = facebook.GraphAPI(token)
 	profile = graph.get_object("me")
+	print profile
 	me = profile.get('first_name') +" "+ profile.get('last_name')
 	friends = graph.get_connections("me", "friends").get('data')
 	groups = graph.get_connections("me","groups").get('data')
