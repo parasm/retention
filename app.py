@@ -19,7 +19,7 @@ app.secret_key = 'paras_is_the_slim_reaper'
 
 
 def sendgrid_notification(user, numcards):
-	sg = sendgrid.Sendgrid('parasm','bcabooks')
+	sg = sendgrid.Sendgrid('username','pass')
 	body = 'It\'s time to study. You have ' + str(numcards) + ' flashcards that you should take a look at.\n http://getretention.herokuapp.com/'
 	message = sendgrid.Message('info@getretention.herokuapp.com', 'GetRetention reminds you to study!', body, body)
 	message.add_to(user["email"],user['first_name'])
